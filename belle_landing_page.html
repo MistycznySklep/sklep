@@ -1,0 +1,465 @@
+
+<style>
+  :root {
+    --cr: #f5f0e8;
+    --cr2: #ede4d4;
+    --cr3: #d4c4a8;
+    --br: #8b6e4e;
+    --br2: #6b5240;
+    --br3: #3d2f1e;
+    --txt: #3d2f1e;
+    --txt2: #6b5240;
+    --txt3: #9a7d60;
+    --bg: #faf7f2;
+    --nav-bg: rgba(250,247,242,0.92);
+    --card-bg: #f5f0e8;
+    --card-border: #d4c4a8;
+    --hr: #d4c4a8;
+    --badge-bg: #ede4d4;
+    --toggle-bg: #ede4d4;
+  }
+  [data-theme="dark"] {
+    --cr: #1e1510;
+    --cr2: #2a1e14;
+    --cr3: #3d2f1e;
+    --br: #c9a882;
+    --br2: #d4b896;
+    --br3: #e8d4b8;
+    --txt: #f0e6d3;
+    --txt2: #c9a882;
+    --txt3: #8b7055;
+    --bg: #120d08;
+    --nav-bg: rgba(18,13,8,0.92);
+    --card-bg: #1e1510;
+    --card-border: #3d2f1e;
+    --hr: #3d2f1e;
+    --badge-bg: #2a1e14;
+    --toggle-bg: #2a1e14;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--txt); font-family: 'Georgia', serif; transition: background 0.4s, color 0.4s; }
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    border-bottom: 0.5px solid var(--card-border);
+    padding: 0 2.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+  .nav-logo {
+    font-family: 'Georgia', serif;
+    font-size: 22px;
+    letter-spacing: 0.25em;
+    color: var(--txt);
+    text-transform: lowercase;
+  }
+  .nav-logo span { font-style: italic; color: var(--br); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { font-family: 'Arial', sans-serif; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--txt2); text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: var(--br); }
+  .nav-right { display: flex; align-items: center; gap: 1.2rem; }
+  .icon-btn { background: none; border: none; cursor: pointer; color: var(--txt2); font-size: 16px; padding: 6px; display: flex; align-items: center; transition: color 0.2s; }
+  .icon-btn:hover { color: var(--br); }
+  .theme-toggle {
+    width: 42px; height: 22px; background: var(--toggle-bg);
+    border-radius: 11px; border: 0.5px solid var(--card-border);
+    cursor: pointer; position: relative; transition: background 0.3s;
+    flex-shrink: 0;
+  }
+  .theme-toggle::after {
+    content: ''; position: absolute; top: 3px; left: 3px;
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--br); transition: transform 0.3s;
+  }
+  [data-theme="dark"] .theme-toggle::after { transform: translateX(20px); }
+
+  .hero {
+    min-height: 92vh;
+    display: grid; grid-template-columns: 1fr 1fr;
+    position: relative; overflow: hidden;
+  }
+  .hero-visual {
+    background: var(--cr2);
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .hero-illustration {
+    width: 320px; height: 440px; position: relative;
+  }
+  .figure-bg {
+    width: 100%; height: 100%;
+    background: var(--cr3);
+    border-radius: 160px 160px 60px 60px;
+    position: absolute; opacity: 0.5;
+  }
+  .figure-dress {
+    position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: 200px; height: 340px;
+    background: var(--br2);
+    border-radius: 30% 30% 0 0 / 20% 20% 0 0;
+    opacity: 0.85;
+  }
+  .figure-body {
+    position: absolute; bottom: 280px; left: 50%; transform: translateX(-50%);
+    width: 60px; height: 80px;
+    background: var(--cr);
+    border-radius: 50% 50% 30% 30%;
+  }
+  .figure-accent {
+    position: absolute; bottom: 120px; left: 50%; transform: translateX(-52%);
+    width: 210px; height: 2px; background: var(--br3); opacity: 0.3;
+  }
+  .hero-tag {
+    position: absolute; top: 2.5rem; left: 2rem;
+    font-family: 'Arial', sans-serif; font-size: 10px; letter-spacing: 0.2em;
+    text-transform: uppercase; color: var(--txt3);
+    border: 0.5px solid var(--card-border); padding: 6px 14px; border-radius: 20px;
+    background: var(--badge-bg);
+  }
+  .hero-dots {
+    position: absolute; bottom: 2rem; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 6px;
+  }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--cr3); }
+  .dot.active { background: var(--br); width: 18px; border-radius: 3px; }
+
+  .hero-content {
+    display: flex; flex-direction: column; justify-content: center;
+    padding: 5rem 4rem 5rem 3rem;
+    background: var(--bg);
+  }
+  .hero-eyebrow {
+    font-family: 'Arial', sans-serif; font-size: 10px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--txt3); margin-bottom: 2rem;
+  }
+  .hero-title {
+    font-size: 56px; line-height: 1.08; font-weight: 400; color: var(--txt);
+    margin-bottom: 1.5rem; letter-spacing: -0.01em;
+  }
+  .hero-title em { font-style: italic; color: var(--br); }
+  .hero-desc {
+    font-family: 'Arial', sans-serif; font-size: 14px; line-height: 1.8;
+    color: var(--txt2); max-width: 340px; margin-bottom: 3rem;
+  }
+  .cta-group { display: flex; gap: 1rem; align-items: center; }
+  .btn-primary {
+    background: var(--br2); color: var(--cr); border: none; cursor: pointer;
+    padding: 14px 32px; font-family: 'Arial', sans-serif;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    border-radius: 2px; transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--br3); transform: translateY(-1px); }
+  .btn-ghost {
+    background: none; border: 0.5px solid var(--card-border); cursor: pointer;
+    padding: 14px 28px; font-family: 'Arial', sans-serif;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--txt2); border-radius: 2px; transition: border-color 0.2s, color 0.2s;
+  }
+  .btn-ghost:hover { border-color: var(--br); color: var(--br); }
+
+  hr.divider { border: none; border-top: 0.5px solid var(--hr); margin: 0; }
+
+  .marquee-wrap {
+    overflow: hidden; background: var(--cr2); padding: 14px 0; border-top: 0.5px solid var(--card-border); border-bottom: 0.5px solid var(--card-border);
+  }
+  .marquee-track {
+    display: flex; gap: 4rem; width: max-content;
+    animation: marquee 18s linear infinite;
+    font-family: 'Arial', sans-serif; font-size: 10px;
+    letter-spacing: 0.25em; text-transform: uppercase; color: var(--txt3);
+  }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  .section { padding: 6rem 2.5rem; }
+  .section-header { text-align: center; margin-bottom: 4rem; }
+  .section-label {
+    font-family: 'Arial', sans-serif; font-size: 10px; letter-spacing: 0.3em;
+    text-transform: uppercase; color: var(--txt3); margin-bottom: 1rem;
+    display: block;
+  }
+  .section-title { font-size: 36px; font-weight: 400; color: var(--txt); letter-spacing: -0.01em; }
+  .section-title em { font-style: italic; color: var(--br); }
+
+  .collections-grid {
+    display: grid; grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 1.5px; max-width: 1100px; margin: 0 auto;
+  }
+  .col-card {
+    position: relative; overflow: hidden; cursor: pointer;
+    aspect-ratio: 3/4;
+    background: var(--cr2);
+    display: flex; flex-direction: column; justify-content: flex-end;
+    transition: transform 0.3s;
+  }
+  .col-card:first-child { aspect-ratio: auto; min-height: 500px; }
+  .col-card:hover { transform: scale(1.01); }
+  .col-illustration {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .col-overlay {
+    position: relative; z-index: 2;
+    padding: 1.5rem; background: linear-gradient(transparent, rgba(61,47,30,0.7));
+  }
+  [data-theme="dark"] .col-overlay { background: linear-gradient(transparent, rgba(0,0,0,0.75)); }
+  .col-tag {
+    font-family: 'Arial', sans-serif; font-size: 9px; letter-spacing: 0.22em;
+    text-transform: uppercase; color: rgba(240,230,210,0.7); margin-bottom: 0.4rem;
+  }
+  .col-name {
+    font-size: 20px; color: #f0e6d3; letter-spacing: 0.02em;
+  }
+  .col-name em { font-style: italic; }
+
+  .shape-a { width: 140px; height: 200px; background: var(--cr3); border-radius: 70px 70px 20px 20px; opacity: 0.6; }
+  .shape-b { width: 100px; height: 160px; background: var(--br); border-radius: 50px; opacity: 0.4; }
+  .shape-c { width: 90px; height: 140px; background: var(--cr3); border-radius: 45px; opacity: 0.5; transform: rotate(-10deg); }
+
+  .about-section {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
+    align-items: center; max-width: 1100px; margin: 0 auto;
+    padding: 6rem 2.5rem;
+  }
+  .about-visual {
+    background: var(--cr2); border-radius: 4px;
+    aspect-ratio: 4/5; display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .about-shape-1 { position: absolute; width: 200px; height: 280px; background: var(--cr3); border-radius: 100px; opacity: 0.5; top: 10%; left: 10%; }
+  .about-shape-2 { position: absolute; width: 160px; height: 240px; background: var(--br); border-radius: 80px; opacity: 0.25; bottom: 10%; right: 8%; transform: rotate(15deg); }
+  .about-monogram {
+    font-size: 120px; font-style: italic; color: var(--br2); opacity: 0.15;
+    position: absolute; font-family: 'Georgia', serif; letter-spacing: -0.05em;
+  }
+  .about-text .section-label { text-align: left; }
+  .about-title { font-size: 38px; line-height: 1.15; font-weight: 400; color: var(--txt); margin-bottom: 1.5rem; }
+  .about-title em { font-style: italic; color: var(--br); }
+  .about-body {
+    font-family: 'Arial', sans-serif; font-size: 14px; line-height: 1.9;
+    color: var(--txt2); margin-bottom: 2rem;
+  }
+  .about-stats { display: flex; gap: 2.5rem; margin-top: 2rem; }
+  .stat-num { font-size: 32px; color: var(--br); font-style: italic; display: block; margin-bottom: 2px; }
+  .stat-label { font-family: 'Arial', sans-serif; font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--txt3); }
+
+  .newsletter-section {
+    background: var(--cr2); padding: 5rem 2.5rem;
+    text-align: center; border-top: 0.5px solid var(--card-border);
+    border-bottom: 0.5px solid var(--card-border);
+  }
+  .newsletter-title { font-size: 32px; font-weight: 400; color: var(--txt); margin-bottom: 0.75rem; }
+  .newsletter-title em { font-style: italic; color: var(--br); }
+  .newsletter-sub { font-family: 'Arial', sans-serif; font-size: 13px; color: var(--txt2); margin-bottom: 2.5rem; line-height: 1.7; }
+  .email-row { display: flex; gap: 0; max-width: 420px; margin: 0 auto; border: 0.5px solid var(--card-border); border-radius: 2px; overflow: hidden; }
+  .email-input {
+    flex: 1; padding: 13px 18px; border: none; background: var(--bg);
+    font-family: 'Arial', sans-serif; font-size: 13px; color: var(--txt);
+    outline: none;
+  }
+  .email-input::placeholder { color: var(--txt3); }
+  .email-btn {
+    background: var(--br2); color: var(--cr); border: none; cursor: pointer;
+    padding: 13px 22px; font-family: 'Arial', sans-serif;
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    transition: background 0.2s; white-space: nowrap;
+  }
+  .email-btn:hover { background: var(--br3); }
+
+  footer {
+    padding: 3rem 2.5rem 2rem;
+    display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 2rem;
+    border-top: 0.5px solid var(--hr);
+  }
+  .footer-brand { }
+  .footer-logo { font-size: 24px; letter-spacing: 0.22em; color: var(--txt); font-style: italic; margin-bottom: 0.75rem; }
+  .footer-tagline { font-family: 'Arial', sans-serif; font-size: 12px; color: var(--txt3); line-height: 1.7; max-width: 200px; }
+  .footer-col h4 { font-family: 'Arial', sans-serif; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--txt3); margin-bottom: 1.2rem; }
+  .footer-col a { display: block; font-family: 'Arial', sans-serif; font-size: 13px; color: var(--txt2); text-decoration: none; margin-bottom: 0.6rem; transition: color 0.2s; }
+  .footer-col a:hover { color: var(--br); }
+  .footer-bottom { border-top: 0.5px solid var(--hr); padding: 1.5rem 2.5rem; display: flex; justify-content: space-between; align-items: center; }
+  .footer-copy { font-family: 'Arial', sans-serif; font-size: 11px; color: var(--txt3); }
+</style>
+
+<div id="root">
+<nav>
+  <div class="nav-logo">bell<span>è</span></div>
+  <ul class="nav-links">
+    <li><a href="#">Kolekcje</a></li>
+    <li><a href="#">Nowości</a></li>
+    <li><a href="#">O marce</a></li>
+    <li><a href="#">Atelier</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="icon-btn" title="Szukaj">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    </button>
+    <button class="icon-btn" title="Koszyk">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+    </button>
+    <div class="theme-toggle" id="themeToggle" title="Zmień motyw"></div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-visual">
+    <div class="hero-tag">Printemps 2025</div>
+    <div class="hero-illustration">
+      <div class="figure-bg"></div>
+      <div class="figure-dress"></div>
+      <div class="figure-body"></div>
+      <div class="figure-accent"></div>
+    </div>
+    <div class="hero-dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Nouvelle Collection — Printemps 2025</p>
+    <h1 class="hero-title">La beauté<br>dans la<br><em>simplicité</em></h1>
+    <p class="hero-desc">Starannie dobrane tkaniny, bezkompromisowa jakość. Każda sztuka to opowieść o elegancji bez wysiłku.</p>
+    <div class="cta-group">
+      <button class="btn-primary">Odkryj kolekcję</button>
+      <button class="btn-ghost">Atelier</button>
+    </div>
+  </div>
+</section>
+
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span>bellè · Paris</span><span>·</span><span>Qualité sans compromis</span><span>·</span>
+    <span>Kolekcja wiosna 2025</span><span>·</span><span>Savoir-faire français</span><span>·</span>
+    <span>bellè · Paris</span><span>·</span><span>Qualité sans compromis</span><span>·</span>
+    <span>Kolekcja wiosna 2025</span><span>·</span><span>Savoir-faire français</span><span>·</span>
+    <span>bellè · Paris</span><span>·</span><span>Qualité sans compromis</span><span>·</span>
+    <span>Kolekcja wiosna 2025</span><span>·</span><span>Savoir-faire français</span><span>·</span>
+  </div>
+</div>
+
+<section class="section" style="padding-bottom: 0;">
+  <div class="section-header">
+    <span class="section-label">Polecane</span>
+    <h2 class="section-title">Nos <em>Collections</em></h2>
+  </div>
+  <div class="collections-grid">
+    <div class="col-card">
+      <div class="col-illustration">
+        <div class="shape-a" style="width:180px;height:260px;border-radius:90px 90px 30px 30px;opacity:0.55;"></div>
+        <div class="shape-b" style="position:absolute;bottom:30%;right:20%;opacity:0.3;"></div>
+      </div>
+      <div class="col-overlay">
+        <p class="col-tag">Bestseller</p>
+        <p class="col-name"><em>Lumière</em> — Wiosna</p>
+      </div>
+    </div>
+    <div class="col-card">
+      <div class="col-illustration">
+        <div class="shape-c" style="width:100px;height:160px;border-radius:50px;transform:rotate(-8deg);"></div>
+      </div>
+      <div class="col-overlay">
+        <p class="col-tag">Nowość</p>
+        <p class="col-name"><em>Soir</em> — Wieczory</p>
+      </div>
+    </div>
+    <div class="col-card">
+      <div class="col-illustration">
+        <div class="shape-a" style="width:110px;height:170px;border-radius:55px 55px 20px 20px;opacity:0.45;transform:rotate(5deg);"></div>
+      </div>
+      <div class="col-overlay">
+        <p class="col-tag">Limitowana</p>
+        <p class="col-name"><em>Blanc</em> — Esencja</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="about-section">
+    <div class="about-visual">
+      <div class="about-shape-1"></div>
+      <div class="about-shape-2"></div>
+      <div class="about-monogram">b</div>
+    </div>
+    <div class="about-text">
+      <span class="section-label">O marce</span>
+      <h2 class="about-title">Filozofia<br><em>cichego luksusu</em></h2>
+      <p class="about-body">
+        bellè narodziło się w Paryżu z przekonania, że prawdziwa elegancja nie potrzebuje hałasu. Każda kreacja tworzona jest przez rzemieślników z pokoleniowym doświadczeniem — z tkanin wybranych osobiście przez założycielkę.
+      </p>
+      <p class="about-body">
+        Nie podążamy za trendami. Tworzymy ponadczasowe formy, które trwają dłużej niż jedna chwila mody.
+      </p>
+      <div class="about-stats">
+        <div>
+          <span class="stat-num">12</span>
+          <span class="stat-label">lat tradycji</span>
+        </div>
+        <div>
+          <span class="stat-num">4</span>
+          <span class="stat-label">Kolekcje rocznie</span>
+        </div>
+        <div>
+          <span class="stat-num">100%</span>
+          <span class="stat-label">Europejskie tkaniny</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="newsletter-section">
+  <p class="section-label">Bądź na bieżąco</p>
+  <h2 class="newsletter-title">L'art de <em>s'habiller</em></h2>
+  <p class="newsletter-sub">Dołącz do grona klientek bellè i jako pierwsza dowiaduj się<br>o nowych kolekcjach, zamkniętych pokazach i ekskluzywnych ofertach.</p>
+  <div class="email-row">
+    <input class="email-input" type="email" placeholder="Twój adres e-mail">
+    <button class="email-btn">S'abonner</button>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-brand">
+    <div class="footer-logo">bellè</div>
+    <p class="footer-tagline">Cichy luksus. Paryski sznyt. Bezkompromisowa jakość.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Kolekcje</h4>
+    <a href="#">Wiosna 2025</a>
+    <a href="#">Wieczory</a>
+    <a href="#">Essentials</a>
+    <a href="#">Archiwum</a>
+  </div>
+  <div class="footer-col">
+    <h4>Marka</h4>
+    <a href="#">Atelier</a>
+    <a href="#">O bellè</a>
+    <a href="#">Prasa</a>
+    <a href="#">Kontakt</a>
+  </div>
+  <div class="footer-col">
+    <h4>Obsługa</h4>
+    <a href="#">Dostawy</a>
+    <a href="#">Zwroty</a>
+    <a href="#">Rozmiarówka</a>
+    <a href="#">FAQ</a>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span class="footer-copy">© 2025 bellè · Wszelkie prawa zastrzeżone</span>
+  <span class="footer-copy">Polityka prywatności · Regulamin</span>
+</div>
+</div>
+
+<script>
+const toggle = document.getElementById('themeToggle');
+const root = document.getElementById('root');
+let dark = false;
+toggle.addEventListener('click', () => {
+  dark = !dark;
+  document.documentElement.setAttribute('data-theme', dark ? 'dark' : '');
+  document.body.setAttribute('data-theme', dark ? 'dark' : '');
+  root.setAttribute('data-theme', dark ? 'dark' : '');
+});
+</script>
